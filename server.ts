@@ -1,5 +1,8 @@
 import fastify from "fastify";
-import crypto from "node:crypto";
+import { db } from "./src/database/client.ts";
+import { courses } from "./src/database/schema.ts";
+import { eq } from "drizzle-orm";
+import { validatorCompiler, serializerCompiler } from "fastify-type-provider-zod";
 
 const server = fastify({
     logger: {
@@ -9,35 +12,61 @@ const server = fastify({
                 translateTime: "HH:MM:ss Z",
                 ignore: 'pid,hostname',
             }
-        }
+        },
     }
 });
 
-const courses = [{ id: '1', title: 'Curso de node.js' }, { id: '2', title: 'Curso de React' }, { id: '3', title: 'Curso de Python' }];
+server.setSerializerCompiler(serializerCompiler)
+server.setValidatorCompiler(validatorCompiler)
 
-server.get('/courses', () => {
-    return { "courses": courses };
+server.get('/courses', async (request, reply) => {
+    const result = await db.select({
+        id: courses.id,
+        title: courses.title
+    }).from(courses)
+    console.log(result)
+    return reply.send({ "courses": result })
 });
 
-server.get('/courses/:id', (req, res) => {
-    const courseId = req.params.id;
+server.get('/courses/:id', async (request, reply) => {
+    type Params = {
+        id: string
+    }
 
-    const course = courses.find(i => i.id === courseId);
+    const params = request.params as Params
 
-    if (!course)
-        res.status(404).send();
+    const courseId = params.id;
 
-    return course
+    const result = await db
+        .select()
+        .from(courses)
+        .where(eq(courses.id, courseId));
+
+    if (result.length > 0)
+        return reply.send({course: result[0]});
+
+    return reply.status(404).send()
 });
 
-server.post('/courses', (req, res) => {
-    const courseTitle = req.body?.title;
+server.post('/courses',async (request, reply) => {
+    type Body = {
+        title: string
+    }
+    
+    const body = request.body as Body
+
+    const courseTitle = body.title;
 
     if (!courseTitle)
-        res.status(400).send({ message: "Title is required" });
+        return reply.status(400).send({ message: "Title is required" });
 
-    courses.push({ id: crypto.randomUUID(), title: courseTitle });
-    res.status(201).send();
+
+    const result = await db
+        .insert(courses)
+        .values({title: courseTitle})
+        .returning()
+
+    return reply.status(201).send({course: result[0].id});
 });
 
 server.listen({ port: 3333 }).then(() => {
