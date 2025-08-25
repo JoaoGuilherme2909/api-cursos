@@ -1,6 +1,11 @@
 import fastifySwagger from "@fastify/swagger";
 import fastify from "fastify";
-import { jsonSchemaTransform, serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import {
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+} from "fastify-type-provider-zod";
 import { getCoursesRoute } from "./routes/get-courses.ts";
 import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
 import { createCourseRoute } from "./routes/create-course.ts";
