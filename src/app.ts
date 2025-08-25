@@ -1,17 +1,12 @@
-import fastify from "fastify";
-import {
-  validatorCompiler,
-  serializerCompiler,
-  type ZodTypeProvider,
-  jsonSchemaTransform,
-} from "fastify-type-provider-zod";
 import fastifySwagger from "@fastify/swagger";
-import { getCoursesRoute } from "./src/routes/get-courses.ts";
-import { getCourseByIdRoute } from "./src/routes/get-course-by-id.ts";
-import { createCourseRoute } from "./src/routes/create-course.ts";
+import fastify from "fastify";
+import { jsonSchemaTransform, serializerCompiler, validatorCompiler, ZodTypeProvider } from "fastify-type-provider-zod";
+import { getCoursesRoute } from "./routes/get-courses.ts";
+import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
+import { createCourseRoute } from "./routes/create-course.ts";
 import scalarAPIReference from "@scalar/fastify-api-reference";
 
-const server = fastify({
+export const server = fastify({
   logger: {
     transport: {
       target: "pino-pretty",
@@ -43,7 +38,3 @@ server.register(scalarAPIReference, {
 server.register(getCoursesRoute);
 server.register(getCourseByIdRoute);
 server.register(createCourseRoute);
-
-server.listen({ port: 3333 }).then(() => {
-  console.log("HTTP server running");
-});
