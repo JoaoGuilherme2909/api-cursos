@@ -4,12 +4,13 @@ import {
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
-  ZodTypeProvider,
+  type ZodTypeProvider,
 } from "fastify-type-provider-zod";
 import { getCoursesRoute } from "./routes/get-courses.ts";
 import { getCourseByIdRoute } from "./routes/get-course-by-id.ts";
 import { createCourseRoute } from "./routes/create-course.ts";
 import scalarAPIReference from "@scalar/fastify-api-reference";
+import { loginRoute } from "./routes/login.ts";
 
 export const server = fastify({
   logger: {
@@ -43,3 +44,4 @@ server.register(scalarAPIReference, {
 server.register(getCoursesRoute);
 server.register(getCourseByIdRoute);
 server.register(createCourseRoute);
+server.register(loginRoute);

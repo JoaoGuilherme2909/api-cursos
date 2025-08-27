@@ -50,6 +50,20 @@
       "when": 1756088149482,
       "tag": "0006_curved_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1756173299319,
+      "tag": "0007_noisy_landau",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1756173651494,
+      "tag": "0008_curvy_dragon_lord",
+      "breakpoints": true
     }
   ]
 }

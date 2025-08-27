@@ -12,3 +12,12 @@ Content-Type: application/json
 {
     "title": "Curso de Cobol"
 }
+
+###
+
+POST http://localhost:3333/sessions
+Content-Type: application/json
+
+{
+
+}
